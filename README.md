@@ -38,15 +38,17 @@ end
 
 ## List of helpers
 
-- agent_robot?
-- agent_human?
-- agent_browser
-- agent_title
-- agent_version
-- agent_device
-- agent_chrome?
-- agent_firefox?
-- agent_ie?
-- agent_safari?
-- agent_opera?
-- agent_mobile?
+```ruby
+agent_robot? #=> true, false
+agent_human? #=> true, false
+agent_browser #=> :ie, :firefox, :chrome, :ie, :opera etc.
+agent_title #=> "Firefox", "Chrome", "Opera" etc.
+agent_version #=> "23.0" etc.
+agent_device #=> :iphone, :ipad, :android etc.
+agent_chrome? #=> true, false
+agent_firefox? #=> true, false
+agent_ie? #=> true, false, maybe it crashes?
+agent_safari? #=> true, false
+agent_opera? #=> true, false
+agent_mobile? #=> true, false
+```
