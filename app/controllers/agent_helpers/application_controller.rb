@@ -1,3 +1,3 @@
-module AgentHelpers::ApplicationController < ActionController::Base
+class AgentHelpers::ApplicationController < ActionController::Base
   
 end
