@@ -1,9 +1,13 @@
 class AgentHelpers::Detector
-  attr_reader :browser, :title, :version
+  attr_reader :browser, :title, :version, :device
   
   def initialize(args)
-    @user_agent = args[:user_agent]
-    raise "No user agent was given." if @user_agent.to_s.trim.empty?
+    @request = args[:request]
+    raise "No request was given." unless @request
+    @env = @request.env
+    @user_agent = @request.user_agent.to_s.downcase.strip
+    raise "No user agent was given." if @user_agent.empty?
+    parse
   end
   
 private
@@ -17,7 +21,7 @@ private
       @browser = :firefox
       @title = "Mozilla Firefox"
       @version = match[1]
-    elsif servervar["HTTP_ACCEPT"] == "*/*" && servervar["HTTP_ACCEPT_LANGUAGE"] == "zh-cn,zh-hk,zh-tw,en-us" && servervar["HTTP_USER_AGENT"] == "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" && (servervar["REMOTE_ADDR"][0,10] == "114.80.93." || servervar["HTTP_X_FORWARDED_FOR"][0, 10] == "114.80.93.")
+    elsif @env["HTTP_ACCEPT"] == "*/*" && @env["HTTP_ACCEPT_LANGUAGE"] == "zh-cn,zh-hk,zh-tw,en-us" && @env["HTTP_USER_AGENT"] == "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" && (@env["REMOTE_ADDR"][0,10] == "114.80.93." || @env["HTTP_X_FORWARDED_FOR"][0, 10] == "114.80.93.")
       @browser = :bot
       @title = "bot"
       @version = "(unknown annoying bot from China)"
@@ -33,15 +37,15 @@ private
       @browser = :bot
       @title = "Bot"
       @version = "Wget #{match[1]}"
-    elsif agent.include?("baiduspider")
+    elsif @user_agent.include?("baiduspider")
       @browser = :bot
       @title = "Bot"
       @version = "Baiduspider"
-    elsif agent.include?("googlebot")
+    elsif match = @user_agent.match(/googlebot\/([\d\.]+)/)
       @browser = :bot
-      @title = "Bot"
-      @version = "Googlebot"
-    elsif agent.include?("gidbot")
+      @title = "Googlebot"
+      @version = match[1]
+    elsif @user_agent.include?("gidbot")
       @browser = :bot
       @title = "Bot"
       @version = "GIDBot"
@@ -53,47 +57,43 @@ private
       @browser = :safari
       @title = "Safari"
       @version = match[1]
-    elsif agent.include?("iPad")
-      @browser = :safari
-      @title = "Safari (iPad)"
-      @version = "ipad"
-    elsif agent.include?("bingbot")
+    elsif @user_agent.include?("bingbot")
       @browser = :bot
       @title = "Bot"
       @version = "Bingbot"
-    elsif agent.include?("yahoo! slurp")
+    elsif @user_agent.include?("yahoo! slurp")
       @browser = :bot
       @title = "Bot"
       @version = "Yahoo! Slurp"
-    elsif agent.include?("hostharvest")
+    elsif @user_agent.include?("hostharvest")
       @browser = :bot
       @title = "Bot"
       @version = "HostHarvest"
-    elsif agent.include?("exabot")
+    elsif @user_agent.include?("exabot")
       @browser = :bot
       @title = "Bot"
       @version = "Exabot"
-    elsif agent.include?("dotbot")
+    elsif @user_agent.include?("dotbot")
       @browser = :bot
       @title = "Bot"
       @version = "DotBot"
-    elsif agent.include?("msnbot")
+    elsif @user_agent.include?("msnbot")
       @browser = :bot
       @title = "Bot"
       @version = "MSN bot"
-    elsif agent.include?("yandexbot")
+    elsif @user_agent.include?("yandexbot")
       @browser = :bot
       @title = "Bot"
       @version = "Yandex Bot"
-    elsif agent.include?("mj12bot")
+    elsif @user_agent.include?("mj12bot")
       @browser = :bot
       @title = "Bot"
       @version = "Majestic12 Bot"
-    elsif agent.include?("facebookexternalhit")
+    elsif @user_agent.include?("facebookexternalhit")
       @browser = :bot
       @title = "Bot"
       @version = "Facebook Externalhit"
-    elsif agent.include?("sitebot")
+    elsif @user_agent.include?("sitebot")
       @browser = :bot
       @title = "Bot"
       @version = "SiteBot"
@@ -109,7 +109,7 @@ private
       @browser = :bot
       @title = "AhrefsBot"
       @version = match[1]
-    elsif agent.include?("sosospider")
+    elsif @user_agent.include?("sosospider")
       @browser = :bot
       @title = "Bot"
       @version = "Sosospider"
@@ -117,6 +117,14 @@ private
       @browser = :unknown
       @title = "(unknown browser)"
       @version = "(unknown version)"
+    end
+    
+    if @user_agent.include?("ipad")
+      @device = :ipad
+    elsif @user_agent.include?("iphone")
+      @device = :iphone
+    elsif @user_agent.include?("android")
+      @device = :android
     end
   end
 end
