@@ -16,6 +16,7 @@ describe AgentHelpers::DetectorHelper do
     @request.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36"
     helper.agent_browser.should eq :chrome
     helper.agent_chrome?.should eq true
+    helper.agent_version.should eq "36.0"
     helper.agent_human?.should eq true
   end
   
