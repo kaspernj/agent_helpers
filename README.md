@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/kaspernj/agent_helpers.png)](https://codeclimate.com/github/kaspernj/agent_helpers)
+
 # AgentHelpers
 
 Detect if the client is a bot, which bot and which version. Also tells if it is a human, which browser, version and much more in Rails.
