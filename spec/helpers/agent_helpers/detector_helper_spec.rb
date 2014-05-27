@@ -16,6 +16,7 @@ describe AgentHelpers::DetectorHelper do
     @request.user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36"
     helper.agent_browser.should eq :chrome
     helper.agent_chrome?.should eq true
+    helper.agent_version.should eq "36.0"
     helper.agent_human?.should eq true
   end
   
@@ -40,7 +41,7 @@ describe AgentHelpers::DetectorHelper do
   it "should detect android" do
     @request.user_agent = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
     helper.agent_mobile?.should eq true
-    helper.agent_device.should eq :android
+    helper.agent_os.should eq :android
     helper.agent_human?.should eq true
   end
   

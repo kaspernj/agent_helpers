@@ -1,0 +1,24 @@
+language: ruby
+rvm:
+  - ruby-1.9.3-p484
+
+before_script:
+  - RAILS_ENV=test
+
+notifications:
+  email: false
+
+cache:
+  - bundler
+
+before_script:
+  - cd spec/dummy
+  - RAILS_ENV=test bundle exec rake db:create
+  - cd spec/dummy; RAILS_ENV=test bundle exec rake db:migrate
+  - cd ../..
+
+addons:
+  code_climate:
+    repo_token: 60153a33550ebc77c3b155e5c27483b3711a8be0e20c5face74240b0c369134c 
+
+script: "bundle exec rspec --format progress"
