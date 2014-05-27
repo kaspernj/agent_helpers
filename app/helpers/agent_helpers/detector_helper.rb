@@ -31,6 +31,10 @@ module AgentHelpers::DetectorHelper
     agent_detector.device
   end
   
+  def agent_os
+    agent_detector.os
+  end
+  
   def agent_chrome?
     agent_detector.browser == :chrome
   end
@@ -52,6 +56,6 @@ module AgentHelpers::DetectorHelper
   end
   
   def agent_mobile?
-    agent_detector.device == :android || agent_detector.device == :ipad || agent_detector.device == :iphone
+    agent_detector.os == :android || agent_detector.os == :ios
   end
 end
