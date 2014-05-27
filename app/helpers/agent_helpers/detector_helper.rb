@@ -27,6 +27,10 @@ module AgentHelpers::DetectorHelper
     agent_detector.version
   end
   
+  def agent_version_major
+    agent_detector.version_major
+  end
+  
   def agent_device
     agent_detector.device
   end

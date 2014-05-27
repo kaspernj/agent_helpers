@@ -8,35 +8,59 @@ class AgentHelpers::Detector
     @user_agent = @request.user_agent.to_s.downcase.strip
     raise "No user agent was given." if @user_agent.empty?
     
-    parse_browsers
+    browsers = [:chrome, :ie, :firefox, :opera, :safari]
+    browsers.each do |browser|
+      __send__("parse_#{browser}") unless @browser
+    end
+    
     parse_bots unless @browser
     parse_device
   end
   
+  def version_major
+    if match = version.to_s.match(/^(\d+)/)
+      return match[1].to_i
+    else
+      return nil
+    end
+  end
+  
 private
   
-  def parse_browsers
-    if match = @user_agent.match(/chrome\/(\d+\.\d+)/)
+  def parse_chrome
+    if match = @user_agent.match(/chrome\/([\d+\.]+)/)
       @browser = :chrome
       @title = "Google Chrome"
       @version = match[1]
-    elsif match = @user_agent.match(/firefox\/(\d+\.\d+)/)
-      @browser = :firefox
-      @title = "Mozilla Firefox"
-      @version = match[1]
-    elsif match = @user_agent.match(/msie\s*(\d+\.\d+)/)
+    end
+  end
+  
+  def parse_ie
+    if match = @user_agent.match(/msie\s*([\d+\.]+)/)
       @browser = :ie
       @title = "Microsoft Internet Explorer"
       @version = match[1]
-    elsif match = @user_agent.match(/opera\/([\d+\.]+)/)
+    end
+  end
+  
+  def parse_firefox
+    if match = @user_agent.match(/firefox\/([\d+\.]+)/)
+      @browser = :firefox
+      @title = "Mozilla Firefox"
+      @version = match[1]
+    end
+  end
+  
+  def parse_opera
+    if match = @user_agent.match(/opera\/([\d+\.]+)/)
       @browser = :opera
       @title = "Opera"
       @version = match[1]
-    elsif match = @user_agent.match(/android\s+([\d\.]+)/)
-      @browser = :android
-      @title = "Android"
-      @version = match[1]
-    elsif match = @user_agent.match(/safari\/(\d+)/)
+    end
+  end
+  
+  def parse_safari
+    if match = @user_agent.match(/safari\/([\d+\.]+)/)
       @browser = :safari
       @title = "Safari"
       @version = match[1]
@@ -56,22 +80,14 @@ private
   end
   
   def parse_bots
-    regex_list = [/(googlebot)\/([\d\.]+)/, /(ezooms)\/([\d\.]+)/, /(ahrefsbot)\/([\d\.]+)/]
+    regex_list = [/(googlebot)\/([\d\.]+)/, /(ezooms)\/([\d\.]+)/, /(ahrefsbot)\/([\d\.]+)/, /(baiduspider)/, /(gidbot)/, /(yahoo! slurp)/,
+      /(hostharvest)/, /(exabot)/, /(dotbot)/, /(msnbot)/, /(yandexbot)/, /(sitebot)/, /(sosospider)/, /(bingbot)/]
     parse_regex_list(regex_list, :bot)
-    return if @browser
-    
-    string_list = ["baiduspider", "gidbot", "yahoo! slurp", "hostharvest", "exabot",
-      "dotbot", "msnbot", "yandexbot", "sitebot", "sosospider"]
-    parse_string_list(string_list, :bot)
     return if @browser
     
     if @env["HTTP_ACCEPT"] == "*/*" && @env["HTTP_ACCEPT_LANGUAGE"] == "zh-cn,zh-hk,zh-tw,en-us" && @env["HTTP_USER_AGENT"] == "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)" && (@env["REMOTE_ADDR"][0,10] == "114.80.93." || @env["HTTP_X_FORWARDED_FOR"][0, 10] == "114.80.93.")
       @browser = :bot
-      @title = "bot"
-      @version = "(unknown annoying bot from China)"
-    elsif @user_agent.include?("bingbot")
-      @browser = :bot
-      @title = "Bingbot"
+      @title = "(unknown annoying bot from China)"
     elsif @user_agent.include?("mj12bot")
       @browser = :bot
       @title = "Majestic12 Bot"
@@ -101,14 +117,6 @@ private
         @version = match[2] if match[2]
         break
       end
-    end
-  end
-  
-  def parse_string_list(list, browser)
-    list.each do |str|
-      next unless @user_agent.include?(str)
-      @browser = browser
-      @title = str.capitalize
     end
   end
 end
