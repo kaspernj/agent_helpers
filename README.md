@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/kaspernj/agent_helpers.svg?branch=master)](https://travis-ci.org/kaspernj/agent_helpers)
 [![Code Climate](https://codeclimate.com/github/kaspernj/agent_helpers.png)](https://codeclimate.com/github/kaspernj/agent_helpers)
+[![Test Coverage](https://codeclimate.com/github/kaspernj/agent_helpers/badges/coverage.svg)](https://codeclimate.com/github/kaspernj/agent_helpers)
 
 # AgentHelpers
 
