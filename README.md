@@ -49,10 +49,16 @@ agent_browser #=> :ie, :firefox, :chrome, :ie, :opera etc.
 agent_title #=> "Firefox", "Chrome", "Opera" etc.
 agent_version #=> "23.0" etc.
 agent_device #=> :iphone, :ipad, :android etc.
+agent_os #=> :windows, :linux, :osx etc.
+agent_os_title #=> "Windows XP", "Windows 7" etc.
 agent_chrome? #=> true, false
 agent_firefox? #=> true, false
 agent_ie? #=> true, false, maybe it crashes?
 agent_safari? #=> true, false
 agent_opera? #=> true, false
 agent_mobile? #=> true, false
+agent_windows? #=> true, false
+agent_linux? #=> true, false
+agent_osx? #=> true, false
+agent_os_version #=> "NT 5.1", "10.6.1" etc.
 ```
