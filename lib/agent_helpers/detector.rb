@@ -139,7 +139,7 @@ private
     elsif @user_agent.include?("linux")
       @os = :linux
       @os_title = "Linux"
-    elsif match = @user_agent.match(/mac os x ([\d_]+)/)
+    elsif match = @user_agent.match(/mac os x ([\d_\.]+)/)
       @os = :osx
       @os_version = match[1].gsub("_", ".")
       detect_osx_title
