@@ -31,7 +31,6 @@ class AgentHelpers::Detector
     raise "No request was given." unless @request
     @env = @request.env
     @user_agent = @request.user_agent.to_s.downcase.strip
-    raise "No user agent was given." if @user_agent.empty?
 
     browsers = [:chrome, :ie, :firefox, :opera, :safari]
     browsers.each do |browser|
@@ -43,7 +42,7 @@ class AgentHelpers::Detector
   end
 
   def version_major
-    if match = version.to_s.match(/^(\d+)/)
+    if (match = version.to_s.match(/^(\d+)/))
       return match[1].to_i
     else
       return nil
@@ -53,7 +52,7 @@ class AgentHelpers::Detector
 private
 
   def parse_chrome
-    if match = @user_agent.match(/chrome\/([\d+\.]+)/)
+    if (match = @user_agent.match(/chrome\/([\d+\.]+)/))
       @browser = :chrome
       @title = "Google Chrome"
       @version = match[1]
@@ -61,7 +60,7 @@ private
   end
 
   def parse_ie
-    if match = @user_agent.match(/msie\s*([\d+\.]+)/)
+    if (match = @user_agent.match(/msie\s*([\d+\.]+)/))
       @browser = :ie
       @title = "Microsoft Internet Explorer"
       @version = match[1]
@@ -69,7 +68,7 @@ private
   end
 
   def parse_firefox
-    if match = @user_agent.match(/firefox\/([\d+\.]+)/)
+    if (match = @user_agent.match(/firefox\/([\d+\.]+)/))
       @browser = :firefox
       @title = "Mozilla Firefox"
       @version = match[1]
@@ -77,7 +76,7 @@ private
   end
 
   def parse_opera
-    if match = @user_agent.match(/opera\/([\d+\.]+)/)
+    if (match = @user_agent.match(/opera\/([\d+\.]+)/))
       @browser = :opera
       @title = "Opera"
       @version = match[1]
@@ -85,7 +84,7 @@ private
   end
 
   def parse_safari
-    if match = @user_agent.match(/safari\/([\d+\.]+)/)
+    if (match = @user_agent.match(/safari\/([\d+\.]+)/))
       @browser = :safari
       @title = "Safari"
       @version = match[1]
@@ -93,11 +92,11 @@ private
   end
 
   def parse_apps
-    if match = @user_agent.match(/wget\/([\d+\.]+)/)
+    if (match = @user_agent.match(/wget\/([\d+\.]+)/))
       @browser = :app
       @title = "Wget"
       @version = match[1]
-    elsif match = @user_agent.match(/java\/([\d\.]+)/)
+    elsif (match = @user_agent.match(/java\/([\d\.]+)/))
       @browser = :app
       @title = "Java"
       @version = match[1]
@@ -157,7 +156,7 @@ private
 
   def parse_regex_list(list, browser)
     list.each do |regex|
-      if match = @user_agent.match(regex)
+      if (match = @user_agent.match(regex))
         @browser = browser
         @title = match[1].to_s.capitalize
         @version = match[2] if match[2]
